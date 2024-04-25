@@ -60,7 +60,7 @@ const Interests = (props) => {
                               {qindex + 1}. {questionItem.question}
                             </Typography>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item xs={7}>
                             <RadioGroup
                               aria-labelledby="demo-radio-buttons-group-label"
                               name="radio-buttons-group"
