@@ -1,66 +1,69 @@
-import {
-  Box,
-  Button,
-  Paper,
-  Step,
-  StepLabel,
-  Stepper,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { useFormik } from "formik";
+import { Box, Paper, Step, StepLabel, Stepper, Toolbar } from "@mui/material";
 import { useState } from "react";
 import Interests from "./Forms/Interests";
-import * as Yup from 'yup';
 import Skills from "./Forms/Skills";
-
+import Purpose from "./Forms/Purpose";
+import SocioEconomic from "./Forms/SocioEconomic";
 
 const Dashboard = () => {
   const steps = ["Interests", "Skills", "Purpose", "Socio-Economic"];
   const [activeStep, setActiveStep] = useState(0);
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    if (activeStep > 0) {
+      setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    }
   };
   const handleNext = () => {
-    if (activeStep < steps.length - 1) {
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }
     if (activeStep === steps.length - 1) {
-      alert("completed all");
+      console.log("all done");
+    } else {
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
 
-  const formContent = (step)=>{
-    switch(step) {
+  const formContent = (step) => {
+    switch (step) {
       case 0:
-        return <Interests formik = {InterestsFormik}/>;
+        return (
+          <Interests
+            activeStep={activeStep}
+            handleBack={handleBack}
+            handleNext={handleNext}
+            steps={steps}
+          />
+        );
       case 1:
-        return <Skills formik = {InterestsFormik}/>;
+        return (
+          <Skills
+            activeStep={activeStep}
+            handleBack={handleBack}
+            handleNext={handleNext}
+            steps={steps}
+          />
+        );
+      case 2:
+        return (
+          <Purpose
+            activeStep={activeStep}
+            handleBack={handleBack}
+            handleNext={handleNext}
+            steps={steps}
+          />
+        );
+      case 3:
+        return (
+          <SocioEconomic
+            activeStep={activeStep}
+            handleBack={handleBack}
+            handleNext={handleNext}
+            steps={steps}
+          />
+        );
       default:
-        return <div>404: Not Found</div>
+        return <div>404: Not Found</div>;
     }
-  }
-
-  const InterestsFormik = useFormik({
-    initialValues : {
-      name:'',
-      skill : ''
-    },
-    validationSchema : Yup.object().shape({
-      name : Yup.string()
-      .required("Name is required"),
-      skill : Yup.string()
-    }),
-    onSubmit : ()=>{
-      if (activeStep === steps.length - 1) {
-        console.log('last step');
-      } else {
-        handleNext();
-      }
-    }
-  });
-
+  };
 
   return (
     <Box>
@@ -82,22 +85,6 @@ const Dashboard = () => {
         </Paper>
         <Paper elevation={3} sx={{ p: "10px", mt: "10px" }}>
           {formContent(activeStep)}
-        </Paper>
-        <Paper elevation={3} sx={{ p: "0px", mt: "10px" }}>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
-            >
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={InterestsFormik.handleSubmit}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-          </Box>
         </Paper>
       </Box>
     </Box>

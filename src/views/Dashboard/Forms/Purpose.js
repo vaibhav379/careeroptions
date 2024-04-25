@@ -11,18 +11,20 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getResponseModelFromSectionModel } from "../../../util/utils";
-import { skillsSection } from "../../../config/FormData/SkillsData";
+import { purposeSections } from "../../../config/FormData/PurposeData";
 
-const Skills = (props) => {
+const Purpose = (props) => {
   const { activeStep, handleBack, handleNext, steps } = {
     ...props,
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     window.scrollTo(0, 0);
-  },[]);
+  }, []);
 
-  const [formResponse, setFormResponse] = useState(getResponseModelFromSectionModel(skillsSection));
+  const [formResponse, setFormResponse] = useState(
+    getResponseModelFromSectionModel(purposeSections)
+  );
 
   const handleChange = (section, question, e) => {
     setFormResponse((res) => {
@@ -42,7 +44,7 @@ const Skills = (props) => {
 
   return (
     <Box>
-      {skillsSection.map((section, index) => {
+      {purposeSections.map((section, index) => {
         return (
           <Box sx={{ pt: "50px", pl: "50px" }} key={index}>
             <Typography variant="h5">
@@ -117,7 +119,7 @@ const Skills = (props) => {
                 </Box>
               );
             })}
-            {index === skillsSection.length - 1 ? null : <Divider />}
+            {index === purposeSections.length - 1 ? null : <Divider />}
           </Box>
         );
       })}
@@ -140,4 +142,4 @@ const Skills = (props) => {
   );
 };
 
-export default Skills;
+export default Purpose;
