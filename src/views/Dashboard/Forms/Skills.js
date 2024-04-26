@@ -1,126 +1,65 @@
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  Grid,
-  Radio,
-  RadioGroup,
-  Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { getResponseModelFromSectionModel } from "../../../util/utils";
+import { Box, Button } from "@mui/material";
+import { useEffect } from "react";
 import { skillsSection } from "../../../config/FormData/SkillsData";
+import FormComponent from "./components/FormComponent";
+import { connect } from "react-redux";
+import { setSkillsFormData } from "../../../store/actions";
+import { enqueueSnackbar } from "notistack";
 
 const Skills = (props) => {
-  const { activeStep, handleBack, handleNext, steps } = {
+  const {
+    activeStep,
+    handleBack,
+    handleNext,
+    steps,
+    formResponse,
+    setSkillsFormData,
+  } = {
     ...props,
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     window.scrollTo(0, 0);
-  },[]);
+  }, []);
 
-  const [formResponse, setFormResponse] = useState(getResponseModelFromSectionModel(skillsSection));
+  const validateForm = () => {
+    for (let i = 0; i < skillsSection.length; i++) {
+      let section = skillsSection[i];
+      for (let j = 0; j < section.questions.length; j++) {
+        let question = section.questions[j];
+        if (
+          !formResponse[`section${section.sectionId}`][
+            `q${question.questionId}`
+          ]
+        ) {
+          enqueueSnackbar(
+            `Error in Section ${section.sectionId} question ${j + 1}`,
+            {
+              variant: "error",
+            }
+          );
+          return false;
+        }
+      }
+    }
 
-  const handleChange = (section, question, e) => {
-    setFormResponse((res) => {
-      return {
-        ...res,
-        [section]: {
-          ...res[section],
-          [question]: e.target.value,
-        },
-      };
-    });
+    return true;
   };
 
-  //   const getFieldname = (section,question)=>{
-  //     return `section${section.sectionId}.q${question.questionId}`;
-  //   }
+  const onSubmit = () => {
+    if (validateForm()) {
+      handleNext();
+    } else {
+    }
+  };
 
   return (
     <Box>
-      {skillsSection.map((section, index) => {
-        return (
-          <Box sx={{ pt: "50px", pl: "50px" }} key={index}>
-            <Typography variant="h5">
-              {index + 1}. {section.description}
-            </Typography>
-            {section.questions.map((questionItem, qindex) => {
-              return (
-                <Box key={qindex} sx={{ pt: "20px" }}>
-                  {questionItem.type === 1 ? (
-                    <Box sx={{ pt: "10px" }}>
-                      <FormControl sx={{ width: "100%" }}>
-                        <Grid container spacing={0}>
-                          <Grid item xs={5}>
-                            <Typography sx={{ pl: "15px" }} variant="body1">
-                              {qindex + 1}. {questionItem.question}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <RadioGroup
-                              aria-labelledby="demo-radio-buttons-group-label"
-                              name="radio-buttons-group"
-                              row
-                              value={
-                                formResponse[`section${section.sectionId}`][
-                                  `q${questionItem.questionId}`
-                                ]
-                              }
-                              onChange={(e) => {
-                                handleChange(
-                                  `section${section.sectionId}`,
-                                  `q${questionItem.questionId}`,
-                                  e
-                                );
-                              }}
-                            >
-                              <FormControlLabel
-                                value="1"
-                                control={<Radio size="small" />}
-                                label="Strongly Disagree"
-                                labelPlacement="top"
-                              />
-                              <FormControlLabel
-                                value="2"
-                                control={<Radio size="small" />}
-                                label="Disagree"
-                                labelPlacement="top"
-                              />
-                              <FormControlLabel
-                                value="3"
-                                control={<Radio size="small" />}
-                                label="Neither Agree Nor Disagree"
-                                labelPlacement="top"
-                              />
-                              <FormControlLabel
-                                value="4"
-                                control={<Radio size="small" />}
-                                label="Agree"
-                                labelPlacement="top"
-                              />
-                              <FormControlLabel
-                                value="5"
-                                control={<Radio size="small" />}
-                                label="Strongly Agree"
-                                labelPlacement="top"
-                              />
-                            </RadioGroup>
-                          </Grid>
-                        </Grid>
-                      </FormControl>
-                    </Box>
-                  ) : null}
-                </Box>
-              );
-            })}
-            {index === skillsSection.length - 1 ? null : <Divider />}
-          </Box>
-        );
-      })}
+      <FormComponent
+        section={skillsSection}
+        formResponse={formResponse}
+        handleChange={setSkillsFormData}
+      />
 
       <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
         <Button
@@ -132,7 +71,7 @@ const Skills = (props) => {
           Back
         </Button>
         <Box sx={{ flex: "1 1 auto" }} />
-        <Button onClick={handleNext}>
+        <Button onClick={onSubmit}>
           {activeStep === steps.length - 1 ? "Finish" : "Next"}
         </Button>
       </Box>
@@ -140,4 +79,18 @@ const Skills = (props) => {
   );
 };
 
-export default Skills;
+const mapStatetoProps = (state) => {
+  return {
+    formResponse: state.form.skillsForm,
+  };
+};
+
+const mapDispatchtoProps = (dispatch) => {
+  return {
+    setSkillsFormData: (section, question, e) => {
+      dispatch(setSkillsFormData(section, question, e.target.value));
+    },
+  };
+};
+
+export default connect(mapStatetoProps, mapDispatchtoProps)(Skills);
