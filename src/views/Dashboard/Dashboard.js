@@ -4,10 +4,13 @@ import Interests from "./Forms/Interests";
 import Skills from "./Forms/Skills";
 import Purpose from "./Forms/Purpose";
 import SocioEconomic from "./Forms/SocioEconomic";
+import { useNavigate } from "react-router";
 
 const Dashboard = () => {
   const steps = ["Interests", "Skills", "Purpose", "Socio-Economic"];
   const [activeStep, setActiveStep] = useState(0);
+  const navigate = useNavigate();
+
 
   const handleBack = () => {
     if (activeStep > 0) {
@@ -17,6 +20,7 @@ const Dashboard = () => {
   const handleNext = () => {
     if (activeStep === steps.length - 1) {
       console.log("all done");
+      navigate("/results");
     } else {
       setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }

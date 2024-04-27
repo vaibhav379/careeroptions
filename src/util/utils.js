@@ -9,3 +9,22 @@ export const getResponseModelFromSectionModel = (sectionModel)=> {
     });
     return o;
 };
+
+export const getFormattedAnswers =(formModel,sectionModel) => {
+
+    let answers = [];
+    Object.keys(formModel).forEach((key)=>{
+        let sectionKey = key.slice(7);
+
+        Object.keys(formModel[key]).forEach((questionKey)=>{
+            let questionId = questionKey.slice(1);
+            if(+formModel[key][questionKey]>=3){
+
+                let questions = sectionModel.filter(x=>x.sectionId===+sectionKey)[0].questions;
+                let question = questions.filter(y=>y.questionId===questionId)[0].question;
+                answers.push(question);
+            }
+        })
+    })
+    return answers.join("\n");
+}
