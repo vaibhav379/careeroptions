@@ -25,3 +25,10 @@ export const setSkillsFormData = (section, question, value) => {
       payload: { section: section, question: question, value: value },
     };
   };
+
+  export const setName = (value) => {
+    return {
+      type: "SET_NAME",
+      payload: { value: value },
+    };
+  };

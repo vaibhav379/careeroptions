@@ -6,6 +6,7 @@ import { purposeSections } from "../config/FormData/PurposeData";
 import { socioEconomicSections } from "../config/FormData/SocioEconomicData";
 
 const initialState = {
+  name: "",
   interestsForm: getResponseModelFromSectionModel(interestsSection),
   skillsForm: getResponseModelFromSectionModel(skillsSection),
   purposeForm: getResponseModelFromSectionModel(purposeSections),
@@ -26,43 +27,50 @@ const setInterestData = (state, action) => {
 };
 
 const setSkillsData = (state, action) => {
-    return {
-      ...state,
-      skillsForm: {
-        ...state.skillsForm,
-        [action.payload.section]: {
-          ...state.skillsForm[action.payload.section],
-          [action.payload.question]: action.payload.value,
-        },
+  return {
+    ...state,
+    skillsForm: {
+      ...state.skillsForm,
+      [action.payload.section]: {
+        ...state.skillsForm[action.payload.section],
+        [action.payload.question]: action.payload.value,
       },
-    };
+    },
   };
+};
 
-  const setPurposeData = (state, action) => {
-    return {
-      ...state,
-      purposeForm: {
-        ...state.purposeForm,
-        [action.payload.section]: {
-          ...state.purposeForm[action.payload.section],
-          [action.payload.question]: action.payload.value,
-        },
+const setPurposeData = (state, action) => {
+  return {
+    ...state,
+    purposeForm: {
+      ...state.purposeForm,
+      [action.payload.section]: {
+        ...state.purposeForm[action.payload.section],
+        [action.payload.question]: action.payload.value,
       },
-    };
+    },
   };
+};
 
-  const setSocioData = (state, action) => {
-    return {
-      ...state,
-      socioEconomicForm: {
-        ...state.socioEconomicForm,
-        [action.payload.section]: {
-          ...state.socioEconomicForm[action.payload.section],
-          [action.payload.question]: action.payload.value,
-        },
+const setSocioData = (state, action) => {
+  return {
+    ...state,
+    socioEconomicForm: {
+      ...state.socioEconomicForm,
+      [action.payload.section]: {
+        ...state.socioEconomicForm[action.payload.section],
+        [action.payload.question]: action.payload.value,
       },
-    };
+    },
   };
+};
+
+const setName = (state, action) => {
+  return {
+    ...state,
+    name: action.payload.value,
+  };
+};
 
 const formReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -74,6 +82,8 @@ const formReducer = (state = initialState, action) => {
       return setPurposeData(state, action);
     case "SET_SOCIO_DATA":
       return setSocioData(state, action);
+    case "SET_NAME":
+      return setName(state, action);
     default:
       return state;
   }

@@ -11,13 +11,6 @@ function App() {
         elevation={2}
       >
         <Toolbar>
-          {/* <Link to={"/tools"}>
-            <img
-              src="/images/logo.svg"
-              alt="logo"
-              style={{ maxWidth: "60px", marginRight: "10px" }}
-            />
-          </Link> */}
           <Typography
             sx={{ fontWeight: "bold" }}
             variant="h5"
