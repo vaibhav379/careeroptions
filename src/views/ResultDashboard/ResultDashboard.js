@@ -18,7 +18,13 @@ import { enqueueSnackbar } from "notistack";
 import { Link } from "react-router-dom";
 
 const ResultsDashboard = (props) => {
-  const { interestsForm, skillsForm, purposeForm, socioEconomicForm, userName } = {
+  const {
+    interestsForm,
+    skillsForm,
+    purposeForm,
+    socioEconomicForm,
+    userName,
+  } = {
     ...props,
   };
   const [isLoading, setIsLoading] = useState(true);
@@ -93,15 +99,17 @@ const ResultsDashboard = (props) => {
   return (
     <Box>
       <Toolbar />
-      <Link to="/dashboard" >Back</Link>
+      <Link to="/dashboard">Back</Link>
       {isLoading ? (
-        <Box sx={{ width: "100%" ,textAlign:"center"}}>
+        <Box sx={{ width: "100%", textAlign: "center" }}>
           <CircularProgress />
           <Typography>Loading...</Typography>
         </Box>
       ) : (
         <Stack alignItems="center" sx={{ width: "100%" }} spacing={5}>
-          <Typography variant="h4">Here are some options for you, {userName}</Typography>
+          <Typography variant="h4">
+            Here are some options for you, {userName}
+          </Typography>
 
           {careerData && careerData.careeroptions && (
             <OptionList careerOption={careerData.careeroptions} />
@@ -118,7 +126,7 @@ const mapStatetoProps = (state) => {
     skillsForm: state.form.skillsForm,
     purposeForm: state.form.purposeForm,
     socioEconomicForm: state.form.socioEconomicForm,
-    userName : state.form.name
+    userName: state.form.name,
   };
 };
 export default connect(mapStatetoProps, null)(ResultsDashboard);
