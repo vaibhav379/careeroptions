@@ -166,12 +166,12 @@ const Home = (props) => {
             </Select>
           </FormControl>
 
-          <FormControl  className="FieldItem">
+          <FormControl className="FieldItem">
             <FormLabel>Education</FormLabel>
             <RadioGroup
               value={formik.education}
               onChange={handleRadioChange}
-              sx={{margin:"auto"}}
+              sx={{ margin: "auto" }}
               row
             >
               <FormControlLabel
