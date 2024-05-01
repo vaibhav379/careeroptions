@@ -26,9 +26,9 @@ export const setSkillsFormData = (section, question, value) => {
     };
   };
 
-  export const setName = (value) => {
+  export const setUserDetails = (value) => {
     return {
-      type: "SET_NAME",
+      type: "SET_USER_DETAILS",
       payload: { value: value },
     };
   };

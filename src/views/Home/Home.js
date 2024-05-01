@@ -1,44 +1,74 @@
 import {
   Box,
-  Button,
-  Input,
+  ButtonBase,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   InputLabel,
-  List,
-  ListItem,
   MenuItem,
+  Radio,
+  RadioGroup,
   Select,
+  Stack,
   TextField,
-  Toolbar,
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router";
-import { setName } from "../../store/actions";
+import { setUserDetails } from "../../store/actions";
 import { connect } from "react-redux";
-import { enqueueSnackbar } from "notistack";
 import cities from "../../config/Misc/cities.json";
-import { useState } from "react";
-import { Label } from "@mui/icons-material";
+import * as yup from "yup";
+import "./Home.css";
+import styled from "@emotion/styled";
+import { useFormik } from "formik";
+
+const StyledButton = styled(ButtonBase)((theme) => ({
+  backgroundColor: "#15d4c4",
+  width: "200px",
+  height: "45px",
+  borderRadius: "10px",
+  fontSize: "larger",
+}));
 
 const Home = (props) => {
-  const { name, setName } = { ...props };
-  const [city, setCity] = useState("");
-  const [region, setRegion] = useState("");
+  const handleRegionChange = (e) => {
+    formik.setFieldValue("region", e.target.value);
+    formik.setFieldValue("city", "");
+  };
 
-  const handleRegionChange = (e)=>{
+  const handleCityChange = (e) => {
+    formik.setFieldValue("city", e.target.value);
+  };
 
-    setRegion(e.target.value);
-    setCity("");
-  }
-
+  const handleRadioChange = (e) => {
+    formik.setFieldValue("education", e.target.value);
+  };
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    if (!name) {
-      enqueueSnackbar("Please enter a name to continue.", { variant: "error" });
-      return;
-    }
-    navigate("/dashboard");
-  };
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      region: "",
+      city: "",
+      education: "",
+      stream: "",
+    },
+    validationSchema: yup.object({
+      name: yup.string().required("Name is required"),
+      email: yup.string().email().required("Email is required"),
+      region: yup.string().required("State is required"),
+      city: yup.string().required("City is required"),
+      education: yup.string(),
+      stream: yup.string(),
+    }),
+    onSubmit: (values) => {
+      setUserDetails(values);
+      console.log(values);
+      navigate("/dashboard");
+    },
+  });
+
   return (
     <Box
       sx={{
@@ -48,58 +78,139 @@ const Home = (props) => {
         display: "flex",
         justifyContent: "center",
         textAlign: "center",
+        backgroundImage: "url(/images/first.png)",
+        backgroundSize: "cover",
       }}
     >
       <Box
         sx={{
           position: "absolute",
-          display: "flex",
           padding: "20px",
-          top: "50%",
+          top: "10%",
         }}
       >
-        <Typography sx={{ p: "20px" }}>
-          Please enter your name to get started
-        </Typography>
-        <TextField onChange={setName} value={name} />
-        <Button sx={{ p: "20px" }} onClick={handleSubmit}>
-          Get Started
-        </Button>
+        <Typography variant="h2">Let's get to know you first</Typography>
+      </Box>
+      <Box
+        sx={{
+          position: "absolute",
+          padding: "20px",
+          top: "30%",
+        }}
+      >
+        <Stack sx={{ minWidth: "20em" }} direction="column" spacing={2.5}>
+          <TextField
+            className="FieldItem"
+            label="Name"
+            id="name"
+            variant="outlined"
+            onChange={formik.handleChange}
+            value={formik.values.name}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
+            fullWidth
+          />
+          <TextField
+            className="FieldItem"
+            label="Email"
+            id="email"
+            variant="outlined"
+            onChange={formik.handleChange}
+            value={formik.values.email}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
+            fullWidth
+          />
 
-        <Select
-          value={region}
-          onChange={handleRegionChange}
-        >
-          <MenuItem value="">Select State</MenuItem>
-          {Object.keys(cities).map((item, index) => {
-            return (
-              <MenuItem key={index} value={item}>
-                {item}
-              </MenuItem>
-            );
-          })}
-        </Select>
+          <FormControl className="FieldItem" fullWidth>
+            <InputLabel id="region-label">State</InputLabel>
+            <Select
+              fullWidth
+              labelId="region-label"
+              id="region"
+              label="State"
+              value={formik.values.region}
+              error={formik.touched.region && Boolean(formik.errors.region)}
+              onChange={handleRegionChange}
+            >
+              <MenuItem value="">Select State</MenuItem>
+              {Object.keys(cities).map((item, index) => {
+                return (
+                  <MenuItem key={index} value={item}>
+                    {item}
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          <FormControl className="FieldItem" fullWidth>
+            <InputLabel id="city-label">City</InputLabel>
+            <Select
+              fullWidth
+              id="city"
+              labelId="city-label"
+              label="City"
+              value={formik.values.city}
+              error={formik.touched.city && Boolean(formik.errors.city)}
+              onChange={handleCityChange}
+            >
+              <MenuItem value="">Select city</MenuItem>
+              {cities[formik.values.region] &&
+                cities[formik.values.region].map((item, index) => {
+                  return (
+                    <MenuItem key={index} value={item}>
+                      {item}
+                    </MenuItem>
+                  );
+                })}
+            </Select>
+          </FormControl>
 
-        {region && (
-          <>
-          <InputLabel>City</InputLabel>
-          <Select
-            value={city}
-            onChange={(e) => {
-              setCity(e.target.value);
-            }}
-          >
-            <MenuItem value="">Select city</MenuItem>
-            {cities[region].map((item, index) => {
-              return (
-                <MenuItem key={index} value={item}>
-                  {item}
-                </MenuItem>
-              );
-            })}
-          </Select>
-          </>
-        )}
+          <FormControl  className="FieldItem">
+            <FormLabel>Education</FormLabel>
+            <RadioGroup
+              value={formik.education}
+              onChange={handleRadioChange}
+              sx={{margin:"auto"}}
+              row
+            >
+              <FormControlLabel
+                value="10th"
+                control={<Radio size="small" />}
+                label="10th"
+              />
+              <FormControlLabel
+                value="12th"
+                control={<Radio size="small" />}
+                label="12th"
+              />
+              <FormControlLabel
+                value="undergrad"
+                control={<Radio size="small" />}
+                label="Undergrad"
+              />
+            </RadioGroup>
+          </FormControl>
+
+          {formik &&
+            formik.values &&
+            ["undergrad"].includes(formik.values.education) && (
+              <TextField
+                className="FieldItem"
+                label="Speacialization"
+                id="stream"
+                variant="outlined"
+                onChange={formik.handleChange}
+                value={formik.values.stream}
+                error={formik.touched.stream && Boolean(formik.errors.stream)}
+                helperText={formik.touched.stream && formik.errors.stream}
+                fullWidth
+              />
+            )}
+          <Box>
+            <StyledButton onClick={formik.handleSubmit}>Proceed</StyledButton>
+          </Box>
+        </Stack>
       </Box>
     </Box>
   );
@@ -107,14 +218,14 @@ const Home = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    name: state.form.name,
+    userDetails: state.form.name,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setName: (e) => {
-      dispatch(setName(e.target.value));
+    setUserDetails: (obj) => {
+      dispatch(setUserDetails(obj));
     },
   };
 };

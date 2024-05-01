@@ -6,7 +6,7 @@ import { purposeSections } from "../config/FormData/PurposeData";
 import { socioEconomicSections } from "../config/FormData/SocioEconomicData";
 
 const initialState = {
-  name: "",
+  userDetails: {},
   interestsForm: getResponseModelFromSectionModel(interestsSection),
   skillsForm: getResponseModelFromSectionModel(skillsSection),
   purposeForm: getResponseModelFromSectionModel(purposeSections),
@@ -65,7 +65,7 @@ const setSocioData = (state, action) => {
   };
 };
 
-const setName = (state, action) => {
+const setUserDetails = (state, action) => {
   return {
     ...state,
     name: action.payload.value,
@@ -82,8 +82,8 @@ const formReducer = (state = initialState, action) => {
       return setPurposeData(state, action);
     case "SET_SOCIO_DATA":
       return setSocioData(state, action);
-    case "SET_NAME":
-      return setName(state, action);
+    case "SET_USER_DETAILS":
+      return setUserDetails(state, action);
     default:
       return state;
   }
