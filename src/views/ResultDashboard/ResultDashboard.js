@@ -106,8 +106,11 @@ const ResultsDashboard = (props) => {
           "relevance" : "relevance score between 1 to 100",
           "description" : "description of career option",
           "why" : "explain why this option fits well",
+          "education" : "explain how to gain the necessary education for this option",
+          "skillbuild" : "explain how to build the necessary skills for this option",
           "talents" : ["strings array of the talents required in this career option"],
           "skills" : ["strings array of the skills required in this career option"],
+          "notable" : ["strings array of the notable people in this career"],
         }
       ]
     }
