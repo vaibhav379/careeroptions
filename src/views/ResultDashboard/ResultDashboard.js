@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import * as service from "../../service/api.service";
 import OptionList from "./OptionList/OptionList";
 import { enqueueSnackbar } from "notistack";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AppBarHOC from "../../util/AppBarHOC";
 
 const ResultsDashboard = (props) => {
