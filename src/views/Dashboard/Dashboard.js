@@ -73,9 +73,15 @@ const Dashboard = () => {
   return (
     <Box>
       <Toolbar />
-      <Button onClick={()=>{navigate("/home")}}>Back</Button>
+      <Button
+        onClick={() => {
+          navigate("/home");
+        }}
+      >
+        Back
+      </Button>
       {/* <Typography variant="h5">Please let us know more about you</Typography> */}
-      <Box sx={{mt : "50px", pr : "100px", pl:"100px", pb: "20px"}}>
+      <Box sx={{ mt: "50px", pr: "100px", pl: "100px", pb: "20px" }}>
         <Paper sx={{ p: "10px" }} elevation={3}>
           <Stepper activeStep={activeStep}>
             {steps.map((step, index) => {

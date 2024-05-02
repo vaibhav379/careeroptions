@@ -18,6 +18,8 @@ import OptionList from "./OptionList/OptionList";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import AppBarHOC from "../../util/AppBarHOC";
+import { DownloadForOffline, Replay } from "@mui/icons-material";
+import './Results.css';
 
 const ResultsDashboard = (props) => {
   const {
@@ -32,13 +34,14 @@ const ResultsDashboard = (props) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [careerData, setCareerData] = useState();
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
 
-  const fetchData = ()=>{
+  const fetchData = () => {
     let url = "/career/getPromptResponse";
     let payload = {
       prompt: getPropmt(),
     };
+
 
     setIsLoading(true);
     setIsError(false);
@@ -60,29 +63,32 @@ const ResultsDashboard = (props) => {
         setIsLoading(false);
         setIsError(true);
       });
-  }
+  };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  const getFormattedEducation = ()=>{
-    if(!userDetails.education){
+  const getFormattedEducation = () => {
+    if (!userDetails.education) {
       return "";
-    }
-    else if(userDetails.education==="12th"){
+    } else if (userDetails.education === "12th") {
       return "He is currently in 12th standard";
-    }
-    else if(userDetails.education==="10th"){
+    } else if (userDetails.education === "10th") {
       return "He is currently in 10th standard";
-    }
-    else if(userDetails.education==="undergrad"){
+    } else if (userDetails.education === "undergrad") {
       return `He is currently undergrad and doing ${userDetails.stream}`;
     }
-  }
+  };
   const getPropmt = () => {
-    let prompt = `Predict 5 possible career options or pathways for ${userDetails.name} based on the following factors. Try to use the factors to figure out which career options in India would be a good fit for ${userDetails.name}.
-    ${userDetails.name} belongs to ${userDetails.city} in India. ${getFormattedEducation()}
+    let prompt = `Predict 5 possible career options or pathways for ${
+      userDetails.name
+    } based on the following factors. Try to use the factors to figure out which career options in India would be a good fit for ${
+      userDetails.name
+    }.
+    ${userDetails.name} belongs to ${
+      userDetails.city
+    } in India. ${getFormattedEducation()}
 
 
     Interests :
@@ -123,15 +129,45 @@ const ResultsDashboard = (props) => {
   return (
     <Box>
       <Toolbar />
-      <Button onClick={()=>{navigate("/dashboard")}}>Back</Button>
+      <Box>
+        <Button
+          onClick={() => {
+            navigate("/dashboard");
+          }}
+        >
+          Back
+        </Button>
+        {isLoading ? null : (
+          <Button
+            sx={{ float: "right", mr: "2em", mt: "1em" }}
+            variant="contained"
+            startIcon={<DownloadForOffline />}
+            onClick={()=>{window.print()}}
+            className="no-print"
+          >
+            Download Report
+          </Button>
+        )}
+      </Box>
       {isLoading ? (
-        <Box sx={{ width: "100%", textAlign: "center" }}>
+        <Box sx={{ width: "100%", textAlign: "center", mt: "20em" }}>
           <CircularProgress />
-          <Typography>Loading...</Typography>
+          <Typography>
+            Generating personalized career options for you...
+          </Typography>
         </Box>
-      ) : isError? (
-        <Box sx={{textAlign:"center", mt:"50px"}}>
-        <Button variant="contained" size="large" onClick={()=>{fetchData()}}>Retry</Button>
+      ) : isError ? (
+        <Box sx={{ textAlign: "center", mt: "50px" }}>
+          <Button
+            variant="contained"
+            size="large"
+            onClick={() => {
+              fetchData();
+            }}
+            endIcon={<Replay/>}
+          >
+            Retry
+          </Button>
         </Box>
       ) : (
         <Stack alignItems="center" sx={{ width: "100%" }} spacing={5}>
@@ -155,7 +191,6 @@ const mapStatetoProps = (state) => {
     purposeForm: state.form.purposeForm,
     socioEconomicForm: state.form.socioEconomicForm,
     userDetails: state.form.userDetails,
-
   };
 };
 export default connect(mapStatetoProps, null)(AppBarHOC(ResultsDashboard));
