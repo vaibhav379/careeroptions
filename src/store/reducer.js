@@ -6,7 +6,14 @@ import { purposeSections } from "../config/FormData/PurposeData";
 import { socioEconomicSections } from "../config/FormData/SocioEconomicData";
 
 const initialState = {
-  userDetails: {},
+  userDetails: {
+    name: "",
+    email: "",
+    region: "",
+    city: "",
+    education: "",
+    stream: "",
+  },
   interestsForm: getResponseModelFromSectionModel(interestsSection),
   skillsForm: getResponseModelFromSectionModel(skillsSection),
   purposeForm: getResponseModelFromSectionModel(purposeSections),
@@ -68,7 +75,7 @@ const setSocioData = (state, action) => {
 const setUserDetails = (state, action) => {
   return {
     ...state,
-    name: action.payload.value,
+    userDetails: action.payload.value,
   };
 };
 

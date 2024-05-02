@@ -1,6 +1,6 @@
 import {
   Box,
-  ButtonBase,
+  Card,
   FormControl,
   FormControlLabel,
   FormLabel,
@@ -19,16 +19,9 @@ import { connect } from "react-redux";
 import cities from "../../config/Misc/cities.json";
 import * as yup from "yup";
 import "./Home.css";
-import styled from "@emotion/styled";
 import { useFormik } from "formik";
+import StyledButton from "../../util/StyledButton";
 
-const StyledButton = styled(ButtonBase)((theme) => ({
-  backgroundColor: "#15d4c4",
-  width: "200px",
-  height: "45px",
-  borderRadius: "10px",
-  fontSize: "larger",
-}));
 
 const Home = (props) => {
   const handleRegionChange = (e) => {
@@ -46,14 +39,7 @@ const Home = (props) => {
   const navigate = useNavigate();
 
   const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      region: "",
-      city: "",
-      education: "",
-      stream: "",
-    },
+    initialValues: props.userDetails,
     validationSchema: yup.object({
       name: yup.string().required("Name is required"),
       email: yup.string().email().required("Email is required"),
@@ -63,7 +49,7 @@ const Home = (props) => {
       stream: yup.string(),
     }),
     onSubmit: (values) => {
-      setUserDetails(values);
+      props.setUserDetails(values);
       console.log(values);
       navigate("/dashboard");
     },
@@ -95,9 +81,10 @@ const Home = (props) => {
         sx={{
           position: "absolute",
           padding: "20px",
-          top: "30%",
+          top: "25%",
         }}
       >
+        <Card sx={{p:"30px"}}>
         <Stack sx={{ minWidth: "20em" }} direction="column" spacing={2.5}>
           <TextField
             className="FieldItem"
@@ -211,6 +198,7 @@ const Home = (props) => {
             <StyledButton onClick={formik.handleSubmit}>Proceed</StyledButton>
           </Box>
         </Stack>
+        </Card>
       </Box>
     </Box>
   );
@@ -218,7 +206,7 @@ const Home = (props) => {
 
 const mapStateToProps = (state) => {
   return {
-    userDetails: state.form.name,
+    userDetails: state.form.userDetails,
   };
 };
 

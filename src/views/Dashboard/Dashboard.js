@@ -1,10 +1,11 @@
-import { Box, Paper, Step, StepLabel, Stepper, Toolbar } from "@mui/material";
+import { Box, Button, Paper, Step, StepLabel, Stepper, Toolbar } from "@mui/material";
 import { useState } from "react";
 import Interests from "./Forms/Interests";
 import Skills from "./Forms/Skills";
 import Purpose from "./Forms/Purpose";
 import SocioEconomic from "./Forms/SocioEconomic";
 import { useNavigate } from "react-router";
+import AppBarHOC from "../../util/AppBarHOC";
 
 const Dashboard = () => {
   const steps = ["Interests", "Skills", "Purpose", "Socio-Economic"];
@@ -72,6 +73,7 @@ const Dashboard = () => {
   return (
     <Box>
       <Toolbar />
+      <Button onClick={()=>{navigate("/home")}}>Back</Button>
       {/* <Typography variant="h5">Please let us know more about you</Typography> */}
       <Box sx={{mt : "50px", pr : "100px", pl:"100px", pb: "20px"}}>
         <Paper sx={{ p: "10px" }} elevation={3}>
@@ -95,4 +97,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default  AppBarHOC(Dashboard);

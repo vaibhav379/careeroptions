@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   CircularProgress,
   Stack,
   Toolbar,
@@ -15,7 +16,8 @@ import { useEffect, useState } from "react";
 import * as service from "../../service/api.service";
 import OptionList from "./OptionList/OptionList";
 import { enqueueSnackbar } from "notistack";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import AppBarHOC from "../../util/AppBarHOC";
 
 const ResultsDashboard = (props) => {
   const {
@@ -23,12 +25,13 @@ const ResultsDashboard = (props) => {
     skillsForm,
     purposeForm,
     socioEconomicForm,
-    userName,
+    userDetails,
   } = {
     ...props,
   };
   const [isLoading, setIsLoading] = useState(true);
   const [careerData, setCareerData] = useState();
+  const navigate  = useNavigate();
 
   useEffect(() => {
     let url = "/career/getPromptResponse";
@@ -60,8 +63,23 @@ const ResultsDashboard = (props) => {
     //console.log("use effect called : "+url)
   }, []);
 
+  const getFormattedEducation = ()=>{
+    if(!userDetails.education){
+      return "";
+    }
+    else if(userDetails.education==="12th"){
+      return "He is currently in 12th standard";
+    }
+    else if(userDetails.education==="10th"){
+      return "He is currently in 10th standard";
+    }
+    else if(userDetails.education==="undergrad"){
+      return `He is currently undergrad and doing ${userDetails.stream}`;
+    }
+  }
   const getPropmt = () => {
-    let prompt = `Predict 5 possible career options or pathways for ${userName} based on the following factors. Try to use the factors to figure out which career options in India would be a good fit for ${userName}
+    let prompt = `Predict 5 possible career options or pathways for ${userDetails.name} based on the following factors. Try to use the factors to figure out which career options in India would be a good fit for ${userDetails.name}.
+    ${userDetails.name} belongs to ${userDetails.city} in India. ${getFormattedEducation()}
 
 
     Interests :
@@ -99,7 +117,7 @@ const ResultsDashboard = (props) => {
   return (
     <Box>
       <Toolbar />
-      <Link to="/dashboard">Back</Link>
+      <Button onClick={()=>{navigate("/dashboard")}}>Back</Button>
       {isLoading ? (
         <Box sx={{ width: "100%", textAlign: "center" }}>
           <CircularProgress />
@@ -108,7 +126,7 @@ const ResultsDashboard = (props) => {
       ) : (
         <Stack alignItems="center" sx={{ width: "100%" }} spacing={5}>
           <Typography variant="h4">
-            Here are some options for you, {userName}
+            Here are some options for you, {userDetails.name}
           </Typography>
 
           {careerData && careerData.careeroptions && (
@@ -126,7 +144,8 @@ const mapStatetoProps = (state) => {
     skillsForm: state.form.skillsForm,
     purposeForm: state.form.purposeForm,
     socioEconomicForm: state.form.socioEconomicForm,
-    userName: state.form.name,
+    userDetails: state.form.userDetails,
+
   };
 };
-export default connect(mapStatetoProps, null)(ResultsDashboard);
+export default connect(mapStatetoProps, null)(AppBarHOC(ResultsDashboard));

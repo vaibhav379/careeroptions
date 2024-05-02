@@ -9,7 +9,13 @@ import { SnackbarProvider } from "notistack";
 import { Provider } from "react-redux";
 import store from "./store/store";
 
-const theme = createTheme({});
+const theme = createTheme({
+  palette:{
+    primary: {
+      main:"#79ab50"
+    }
+  }
+});
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     <BrowserRouter>
