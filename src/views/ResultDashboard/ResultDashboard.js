@@ -30,15 +30,18 @@ const ResultsDashboard = (props) => {
     ...props,
   };
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [careerData, setCareerData] = useState();
   const navigate  = useNavigate();
 
-  useEffect(() => {
+  const fetchData = ()=>{
     let url = "/career/getPromptResponse";
     let payload = {
       prompt: getPropmt(),
     };
 
+    setIsLoading(true);
+    setIsError(false);
     service
       .Post(url, payload)
       .then((res) => {
@@ -55,12 +58,12 @@ const ResultsDashboard = (props) => {
       .catch((err) => {
         enqueueSnackbar("Some Error Occurred", { variant: "error" });
         setIsLoading(false);
+        setIsError(true);
       });
+  }
 
-    //     let extract = json.substring(json.indexOf('{'),json.lastIndexOf('}')+1);
-    //     setCareerData(JSON.parse(extract));
-
-    //console.log("use effect called : "+url)
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const getFormattedEducation = ()=>{
@@ -122,6 +125,10 @@ const ResultsDashboard = (props) => {
         <Box sx={{ width: "100%", textAlign: "center" }}>
           <CircularProgress />
           <Typography>Loading...</Typography>
+        </Box>
+      ) : isError? (
+        <Box sx={{textAlign:"center", mt:"50px"}}>
+        <Button variant="contained" size="large" onClick={()=>{fetchData()}}>Retry</Button>
         </Box>
       ) : (
         <Stack alignItems="center" sx={{ width: "100%" }} spacing={5}>
