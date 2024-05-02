@@ -2,9 +2,9 @@ import axios from "axios";
 
 const Base_URL = () => {
   if (window.location.hostname.includes("localhost")) {
-    return "http://34.100.213.133";
+    return "https://api.codewarp.in";
   } else {
-    return "http://34.100.213.133";
+    return "https://api.codewarp.in";
   }
 };
 
