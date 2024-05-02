@@ -4,7 +4,7 @@ const Base_URL = () => {
   if (window.location.hostname.includes("localhost")) {
     return "http://34.100.213.133";
   } else {
-    return "https://codewarpapi.netlify.app/.netlify/functions/app";
+    return "http://34.100.213.133";
   }
 };
 
